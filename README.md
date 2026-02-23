@@ -1,6 +1,6 @@
 # Windows Dev Environment Setup
 
-A single PowerShell script that bootstraps a complete Windows development environment.
+A single script that bootstraps a complete Windows development environment. Available as PowerShell or a standalone Go binary.
 
 ## What Gets Installed
 
@@ -21,13 +21,38 @@ A single PowerShell script that bootstraps a complete Windows development enviro
 
 ## Quick Start
 
+### Option A: PowerShell
+
 ```powershell
 git clone <this-repo-url> windos-setup
 cd windos-setup
 .\setup.ps1
 ```
 
-The script is **idempotent** - safe to re-run at any time. It skips already-installed tools and only updates config files that have changed (with timestamped backups).
+### Option B: Go binary
+
+Download `setup.exe` from the [latest GitHub Release](../../releases/latest) and place it in the repo root, or build from source:
+
+```powershell
+go build -o setup.exe setup.go
+.\setup.exe
+```
+
+Both options are **idempotent** - safe to re-run at any time. They skip already-installed tools and only update config files that have changed (with timestamped backups).
+
+## Building from Source
+
+With Go installed:
+
+```bash
+# On Windows
+go build -o setup.exe setup.go
+
+# Cross-compile from macOS/Linux
+GOOS=windows GOARCH=amd64 go build -o setup.exe setup.go
+```
+
+No external dependencies - the Go version uses only the standard library.
 
 ## Requirements
 
@@ -67,13 +92,15 @@ The script is **idempotent** - safe to re-run at any time. It skips already-inst
 
 ## Customizing
 
-Edit config files in the `configs/` directory, then re-run `.\setup.ps1` to deploy them. Changed files are deployed with automatic backups of the previous version.
+Edit config files in the `configs/` directory, then re-run `.\setup.ps1` (or `.\setup.exe`) to deploy them. Changed files are deployed with automatic backups of the previous version.
 
 ## Repo Structure
 
 ```
 windos-setup/
-  setup.ps1                           # Main setup script
+  setup.ps1                           # Main setup script (PowerShell)
+  setup.go                            # Main setup script (Go)
+  go.mod                              # Go module (no external deps)
   configs/
     wezterm/.wezterm.lua              # WezTerm config
     nushell/config.nu                 # Nushell settings
